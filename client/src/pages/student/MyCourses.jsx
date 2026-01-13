@@ -169,12 +169,20 @@ const MyCourses = () => {
                                         </div>
 
                                         {isCompleted ? (
-                                            <Link
-                                                to={`/course/${enrollment.course?._id}/certificate`}
-                                                className="block w-full text-center py-2.5 px-4 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg text-sm font-semibold transition-colors"
-                                            >
-                                                🎓 View Certificate
-                                            </Link>
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    to={`/course/${enrollment.course?._id}/learn`}
+                                                    className="flex-1 text-center py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                                                >
+                                                    ▶ Watch Again
+                                                </Link>
+                                                <Link
+                                                    to={`/course/${enrollment.course?._id}/certificate`}
+                                                    className="flex-1 text-center py-2.5 px-3 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg text-sm font-semibold transition-colors"
+                                                >
+                                                    🎓 Certificate
+                                                </Link>
+                                            </div>
                                         ) : (
                                             <Link
                                                 to={`/course/${enrollment.course?._id}/learn`}

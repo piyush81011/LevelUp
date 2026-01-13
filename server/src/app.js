@@ -36,11 +36,15 @@ import userRouter from './routes/user.routes.js'
 import courseRouter from './routes/course.routes.js'
 import enrollmentRouter from './routes/enrollment.routes.js'
 import contentRouter from './routes/content.routes.js'
+import uploadRouter from './routes/upload.routes.js';
+import chatRouter from './routes/chat.routes.js';
 
 // routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/courses", courseRouter)
 app.use("/api/v1/enrollments", enrollmentRouter)
 app.use("/api/v1/content", contentRouter)
+app.use("/api/v1/upload", uploadRouter);
+app.use("/api/v1/chat", chatRouter);
 
 export { app };

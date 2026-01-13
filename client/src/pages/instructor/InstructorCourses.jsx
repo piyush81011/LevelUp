@@ -2,10 +2,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { IoMdChatbubbles } from "react-icons/io";
+import ChatWindow from "../../components/ChatWindow";
+import InstructorChatList from "../../components/InstructorChatList";
 
 const InstructorCourses = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeChatCourse, setActiveChatCourse] = useState(null);
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -81,9 +86,8 @@ const InstructorCourses = () => {
                                             <span className="text-4xl font-bold text-white/50">{course.title?.charAt(0)}</span>
                                         </div>
                                     )}
-                                    <span className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold ${
-                                        course.isPublished ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-900"
-                                    }`}>
+                                    <span className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold ${course.isPublished ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-900"
+                                        }`}>
                                         {course.isPublished ? "Published" : "Draft"}
                                     </span>
                                 </div>
@@ -93,7 +97,7 @@ const InstructorCourses = () => {
                                     </span>
                                     <h3 className="text-lg font-bold text-gray-900 mt-1 mb-2 line-clamp-1">{course.title}</h3>
                                     <p className="text-sm text-gray-500 mb-4">{course.sections?.length || 0} sections</p>
-                                    
+
                                     <div className="flex gap-2">
                                         <Link
                                             to={`/instructor/course/${course._id}/edit`}
@@ -101,6 +105,13 @@ const InstructorCourses = () => {
                                         >
                                             Edit
                                         </Link>
+                                        <button
+                                            onClick={() => setActiveChatCourse(activeChatCourse === course._id ? null : course._id)}
+                                            className="flex-1 text-center py-2 px-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                                        >
+                                            <IoMdChatbubbles />
+                                            Chat
+                                        </button>
                                         <Link
                                             to={`/instructor/course/${course._id}/manage`}
                                             className="flex-1 text-center py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -114,6 +125,21 @@ const InstructorCourses = () => {
                     </div>
                 )}
             </div>
+            {activeChatCourse && !selectedStudent && (
+                <InstructorChatList
+                    courseId={activeChatCourse}
+                    onSelectStudent={(student) => setSelectedStudent(student)}
+                    onClose={() => setActiveChatCourse(null)}
+                />
+            )}
+
+            {activeChatCourse && selectedStudent && (
+                <ChatWindow
+                    courseId={activeChatCourse}
+                    receiverId={selectedStudent._id}
+                    onClose={() => setSelectedStudent(null)}
+                />
+            )}
         </DashboardLayout>
     );
 };

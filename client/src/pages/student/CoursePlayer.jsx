@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { IoMdChatbubbles } from "react-icons/io";
+import ChatWindow from "../../components/ChatWindow";
+import { useAuth } from "../../context/AuthContext";
 
 const CoursePlayer = () => {
     const { courseId } = useParams();
@@ -14,6 +17,8 @@ const CoursePlayer = () => {
     const [marking, setMarking] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
     const [completingCourse, setCompletingCourse] = useState(false);
+    const [showChat, setShowChat] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchCourseContent = async () => {
@@ -55,7 +60,7 @@ const CoursePlayer = () => {
 
     const handleMarkComplete = async () => {
         if (!currentLesson || completedLessons.includes(currentLesson._id)) return;
-        
+
         setMarking(true);
         try {
             await axios.post(
@@ -118,7 +123,7 @@ const CoursePlayer = () => {
                 <div className="flex items-center gap-4">
                     <div className="hidden sm:flex items-center gap-2">
                         <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300"
                                 style={{ width: `${progressPercentage}%` }}
                             />
@@ -167,11 +172,10 @@ const CoursePlayer = () => {
                                     <button
                                         onClick={handleMarkComplete}
                                         disabled={marking || completedLessons.includes(currentLesson._id)}
-                                        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                                            completedLessons.includes(currentLesson._id)
-                                                ? "bg-green-600/20 text-green-400 cursor-default"
-                                                : "bg-indigo-600 hover:bg-indigo-700 text-white"
-                                        }`}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${completedLessons.includes(currentLesson._id)
+                                            ? "bg-green-600/20 text-green-400 cursor-default"
+                                            : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                                            }`}
                                     >
                                         {completedLessons.includes(currentLesson._id) ? (
                                             <>
@@ -212,7 +216,7 @@ const CoursePlayer = () => {
                     <div className="p-4 border-b border-gray-700 text-sm font-bold text-gray-400 uppercase tracking-wider">
                         Course Content
                     </div>
-                    
+
                     {/* Certificate / Complete Course Section */}
                     <div className="p-4 border-b border-gray-700">
                         {isCompleted ? (
@@ -293,6 +297,20 @@ const CoursePlayer = () => {
                     </div>
                 </div>
             </div>
+            {user && (
+                <>
+                    {!showChat && (
+                        <button
+                            onClick={() => setShowChat(true)}
+                            className="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition z-50 flex items-center justify-center animate-bounce"
+                            title="Chat with Instructor"
+                        >
+                            <IoMdChatbubbles size={28} />
+                        </button>
+                    )}
+                    {showChat && <ChatWindow courseId={courseId} receiverId={course.instructor?._id} onClose={() => setShowChat(false)} />}
+                </>
+            )}
         </div>
     );
 };

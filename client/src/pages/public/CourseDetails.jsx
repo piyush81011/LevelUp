@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
+import { IoMdChatbubbles } from "react-icons/io";
+import ChatWindow from "../../components/ChatWindow";
 
 const CourseDetails = () => {
     const { courseId } = useParams();
@@ -12,6 +14,7 @@ const CourseDetails = () => {
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(false);
     const [isEnrolled, setIsEnrolled] = useState(false);
+    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -121,14 +124,14 @@ const CourseDetails = () => {
 
                         <div className="flex items-center gap-4">
                             {isEnrolled ? (
-                                <Link 
+                                <Link
                                     to={`/course/${courseId}/learn`}
                                     className="px-8 py-4 bg-green-500 text-white rounded-full text-lg font-bold hover:bg-green-600 transition-all duration-300 shadow-xl shadow-green-500/20 transform hover:-translate-y-1"
                                 >
                                     Continue Learning
                                 </Link>
                             ) : (
-                                <button 
+                                <button
                                     onClick={handleEnroll}
                                     disabled={enrolling}
                                     className="px-8 py-4 bg-white text-gray-900 rounded-full text-lg font-bold hover:bg-gray-100 transition-all duration-300 shadow-xl shadow-white/10 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -213,8 +216,8 @@ const CourseDetails = () => {
                                             {section.lessons && section.lessons.length > 0 && (
                                                 <div className="border-t border-gray-700">
                                                     {section.lessons.map((lesson, lessonIndex) => (
-                                                        <div 
-                                                            key={lesson._id} 
+                                                        <div
+                                                            key={lesson._id}
                                                             className="px-6 py-3 flex items-center justify-between hover:bg-gray-700/30 transition-colors border-b border-gray-700/50 last:border-b-0"
                                                         >
                                                             <div className="flex items-center gap-3">
@@ -290,14 +293,14 @@ const CourseDetails = () => {
                                     </span>
                                 </div>
                                 {isEnrolled ? (
-                                    <Link 
+                                    <Link
                                         to={`/course/${courseId}/learn`}
                                         className="block w-full text-center py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors"
                                     >
                                         Continue Learning
                                     </Link>
                                 ) : (
-                                    <button 
+                                    <button
                                         onClick={handleEnroll}
                                         disabled={enrolling}
                                         className="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50"
@@ -310,6 +313,21 @@ const CourseDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {isEnrolled && (
+                <>
+                    {!showChat && (
+                        <button
+                            onClick={() => setShowChat(true)}
+                            className="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition z-50 flex items-center justify-center animate-bounce"
+                            title="Chat with Instructor"
+                        >
+                            <IoMdChatbubbles size={28} />
+                        </button>
+                    )}
+                    {showChat && <ChatWindow courseId={courseId} receiverId={course.instructor?._id} onClose={() => setShowChat(false)} />}
+                </>
+            )}
         </div>
     );
 };

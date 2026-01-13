@@ -26,6 +26,7 @@ const DashboardLayout = ({ children }) => {
             return [
                 { name: "Dashboard", path: "/instructor/dashboard", icon: "home" },
                 { name: "My Courses", path: "/instructor/courses", icon: "book" },
+                { name: "Messages", path: "/instructor/messages", icon: "clipboard" }, // Reusing clipboard icon or create chat icon
                 { name: "Create Course", path: "/instructor/create-course", icon: "plus" },
                 { name: "Students", path: "/instructor/students", icon: "users" },
                 { name: "Earnings", path: "/instructor/earnings", icon: "dollar" },
@@ -201,7 +202,7 @@ const DashboardLayout = ({ children }) => {
                             <h4 className="font-semibold text-sm mb-1">Need Help?</h4>
                             <p className="text-xs text-indigo-100 mb-3">Check our documentation or contact support.</p>
                             <Link
-                                to="/help"
+                                to="/support"
                                 className="inline-flex items-center text-xs font-medium bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md transition-colors"
                             >
                                 Get Support

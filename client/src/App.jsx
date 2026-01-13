@@ -24,6 +24,7 @@ import InstructorSettings from "./pages/instructor/InstructorSettings.jsx";
 import CreateCourse from "./pages/instructor/CreateCourse.jsx";
 import ManageCourse from "./pages/instructor/ManageCourse.jsx";
 import EditCourse from "./pages/instructor/EditCourse.jsx";
+import InstructorMessages from "./pages/instructor/InstructorMessages.jsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminUsers from "./pages/admin/AdminUsers.jsx";
@@ -34,6 +35,7 @@ import AdminSettings from "./pages/admin/AdminSettings.jsx";
 
 import Home from "./pages/public/Home.jsx";
 import CourseDetails from "./pages/public/CourseDetails.jsx";
+import Support from "./pages/public/Support.jsx";
 
 // Placeholder Pages
 // const Home = () => <div className="p-8 text-center text-3xl font-bold text-gray-800">Welcome to the LMS Platform</div>;
@@ -42,17 +44,17 @@ const NotFound = () => <div className="p-8 text-center text-red-500">404 - Page 
 // Layout wrapper to conditionally show footer and navbar
 const AppLayout = ({ children }) => {
   const location = useLocation();
-  
+
   // Hide footer on dashboard pages
-  const isDashboardPage = location.pathname.includes('/dashboard') || 
-                          location.pathname.includes('/instructor/') ||
-                          location.pathname.includes('/admin/') ||
-                          location.pathname.includes('/student/');
-  
+  const isDashboardPage = location.pathname.includes('/dashboard') ||
+    location.pathname.includes('/instructor/') ||
+    location.pathname.includes('/admin/') ||
+    location.pathname.includes('/student/');
+
   // Hide navbar on course player and certificate pages (they have their own nav)
-  const isFullscreenPage = location.pathname.includes('/learn') || 
-                           location.pathname.includes('/certificate');
-  
+  const isFullscreenPage = location.pathname.includes('/learn') ||
+    location.pathname.includes('/certificate');
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
       {!isFullscreenPage && <Navbar />}
@@ -74,6 +76,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/course/:courseId" element={<CourseDetails />} />
+            <Route path="/support" element={<Support />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
@@ -96,6 +99,7 @@ function App() {
               <Route path="/instructor/create-course" element={<CreateCourse />} />
               <Route path="/instructor/course/:courseId/edit" element={<EditCourse />} />
               <Route path="/instructor/course/:courseId/manage" element={<ManageCourse />} />
+              <Route path="/instructor/messages" element={<InstructorMessages />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
