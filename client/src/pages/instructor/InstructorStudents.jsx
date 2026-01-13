@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const InstructorStudents = () => {
     const [students, setStudents] = useState([]);
@@ -11,7 +12,7 @@ const InstructorStudents = () => {
         const fetchStudents = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/enrollments/instructor/students",
+                    `${API_BASE_URL}/api/v1/enrollments/instructor/students`,
                     { withCredentials: true }
                 );
                 setStudents(response.data.data.students || []);
@@ -93,7 +94,7 @@ const InstructorStudents = () => {
                     <div className="p-6 border-b border-gray-100">
                         <h3 className="text-lg font-semibold text-gray-900">Enrolled Students</h3>
                     </div>
-                    
+
                     {students.length === 0 ? (
                         <div className="text-center py-12">
                             <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,8 +137,8 @@ const InstructorStudents = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-24 h-2 bg-gray-200 rounded-full">
-                                                        <div 
-                                                            className={`h-full rounded-full ${enrollment.isCompleted ? 'bg-green-500' : 'bg-indigo-500'}`} 
+                                                        <div
+                                                            className={`h-full rounded-full ${enrollment.isCompleted ? 'bg-green-500' : 'bg-indigo-500'}`}
                                                             style={{ width: `${enrollment.progress}%` }}
                                                         ></div>
                                                     </div>
@@ -148,13 +149,12 @@ const InstructorStudents = () => {
                                                 </p>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                    enrollment.isCompleted 
-                                                        ? 'bg-green-100 text-green-700' 
-                                                        : enrollment.progress > 0 
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${enrollment.isCompleted
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : enrollment.progress > 0
                                                             ? 'bg-yellow-100 text-yellow-700'
                                                             : 'bg-gray-100 text-gray-600'
-                                                }`}>
+                                                    }`}>
                                                     {enrollment.isCompleted ? 'Completed' : enrollment.progress > 0 ? 'In Progress' : 'Not Started'}
                                                 </span>
                                             </td>

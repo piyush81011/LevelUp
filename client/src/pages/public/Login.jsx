@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Login = () => {
         try {
             // In a real scenario, use an environment variable or proxy
             const response = await axios.post(
-                "http://localhost:8000/api/v1/users/login",
+                `${API_BASE_URL}/api/v1/users/login`,
                 formData,
                 { withCredentials: true }
             );

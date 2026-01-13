@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ const AdminUsers = () => {
         const fetchUsers = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/users",
+                    `${API_BASE_URL}/api/v1/users`,
                     { withCredentials: true }
                 );
                 setUsers(response.data.data || []);
@@ -77,9 +78,8 @@ const AdminUsers = () => {
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-                                filter === f ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${filter === f ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }`}
                         >
                             {f === "all" ? "All Users" : `${f}s`}
                         </button>
@@ -112,11 +112,10 @@ const AdminUsers = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                                            user.role === "admin" ? "bg-purple-100 text-purple-700" :
-                                            user.role === "instructor" ? "bg-green-100 text-green-700" :
-                                            "bg-blue-100 text-blue-700"
-                                        }`}>
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${user.role === "admin" ? "bg-purple-100 text-purple-700" :
+                                                user.role === "instructor" ? "bg-green-100 text-green-700" :
+                                                    "bg-blue-100 text-blue-700"
+                                            }`}>
                                             {user.role}
                                         </span>
                                     </td>

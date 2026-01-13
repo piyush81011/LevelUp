@@ -3,12 +3,13 @@ import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const Settings = () => {
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState("profile");
     const [loading, setLoading] = useState(false);
-    
+
     const [formData, setFormData] = useState({
         name: user?.name || "",
         email: user?.email || "",
@@ -26,7 +27,7 @@ const Settings = () => {
         setLoading(true);
         try {
             await axios.put(
-                "http://localhost:8000/api/v1/users/update-profile",
+                `${API_BASE_URL}/api/v1/users/update-profile`,
                 { name: formData.name },
                 { withCredentials: true }
             );
@@ -51,7 +52,7 @@ const Settings = () => {
         setLoading(true);
         try {
             await axios.put(
-                "http://localhost:8000/api/v1/users/change-password",
+                `${API_BASE_URL}/api/v1/users/change-password`,
                 {
                     currentPassword: formData.currentPassword,
                     newPassword: formData.newPassword,
@@ -90,11 +91,10 @@ const Settings = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`py-4 px-6 text-sm font-medium border-b-2 transition-colors ${
-                                        activeTab === tab.id
+                                    className={`py-4 px-6 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.id
                                             ? "border-indigo-600 text-indigo-600"
                                             : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                                    }`}
+                                        }`}
                                 >
                                     {tab.name}
                                 </button>
@@ -107,7 +107,7 @@ const Settings = () => {
                         {activeTab === "profile" && (
                             <form onSubmit={handleProfileUpdate} className="max-w-lg">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h3>
-                                
+
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                                     <input
@@ -154,7 +154,7 @@ const Settings = () => {
                         {activeTab === "security" && (
                             <form onSubmit={handlePasswordChange} className="max-w-lg">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
-                                
+
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                                     <input
@@ -201,7 +201,7 @@ const Settings = () => {
                         {activeTab === "notifications" && (
                             <div className="max-w-lg">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Notification Preferences</h3>
-                                
+
                                 <div className="space-y-4">
                                     <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                         <div>

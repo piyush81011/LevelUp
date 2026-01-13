@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoMdClose, IoMdChatbubbles } from "react-icons/io";
+import { API_BASE_URL } from "../config/api";
 
 const InstructorChatList = ({ courseId, onSelectStudent, onClose }) => {
     const [students, setStudents] = useState([]);
@@ -10,7 +11,7 @@ const InstructorChatList = ({ courseId, onSelectStudent, onClose }) => {
         const fetchChatUsers = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/chat/users/${courseId}`,
+                    `${API_BASE_URL}/api/v1/chat/users/${courseId}`,
                     { withCredentials: true }
                 );
                 if (response.data.success) {

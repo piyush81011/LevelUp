@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const CreateCourse = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const CreateCourse = () => {
 
     const categories = [
         "Web Development",
-        "Mobile Development", 
+        "Mobile Development",
         "Data Science",
         "Machine Learning",
         "DevOps",
@@ -110,7 +111,7 @@ const CreateCourse = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/v1/courses",
+                `${API_BASE_URL}/api/v1/courses`,
                 formData,
                 {
                     withCredentials: true,
@@ -183,8 +184,8 @@ const CreateCourse = () => {
                                     </div>
 
                                     <div className="grid grid-cols-6 gap-6">
-                                    <div>
-                                        <label htmlFor="category" className="block text-sm font-medium text-gray-300">
+                                        <div>
+                                            <label htmlFor="category" className="block text-sm font-medium text-gray-300">
                                                 Category
                                             </label>
                                             <select
@@ -228,9 +229,9 @@ const CreateCourse = () => {
                                             {/* Thumbnail Preview */}
                                             {formData.thumbnail && (
                                                 <div className="relative rounded-xl overflow-hidden border border-gray-700">
-                                                    <img 
-                                                        src={formData.thumbnail} 
-                                                        alt="Thumbnail preview" 
+                                                    <img
+                                                        src={formData.thumbnail}
+                                                        alt="Thumbnail preview"
                                                         className="w-full h-40 object-cover"
                                                         onError={(e) => e.target.style.display = 'none'}
                                                     />
@@ -259,7 +260,7 @@ const CreateCourse = () => {
                                                     </div>
                                                 </div>
                                             )}
-                                            
+
                                             {/* Generate Button */}
                                             {!formData.thumbnail && (
                                                 <button
@@ -286,13 +287,13 @@ const CreateCourse = () => {
                                                     )}
                                                 </button>
                                             )}
-                                            
+
                                             <div className="flex items-center gap-2">
                                                 <div className="flex-1 h-px bg-gray-700"></div>
                                                 <span className="text-xs text-gray-500">or paste URL</span>
                                                 <div className="flex-1 h-px bg-gray-700"></div>
                                             </div>
-                                            
+
                                             <input
                                                 type="url"
                                                 name="thumbnail"

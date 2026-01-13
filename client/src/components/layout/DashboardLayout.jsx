@@ -1,11 +1,25 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const DashboardLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
+    const mainContentRef = useRef(null);
+
+    // Scroll to top of main content on route change
+    useEffect(() => {
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+        }
+    }, [location.pathname]);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
     // Define navigation items based on user role
     const getNavItems = () => {
@@ -99,11 +113,19 @@ const DashboardLayout = ({ children }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             ),
+            logout: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            ),
         };
         return icons[iconName] || icons.home;
     };
 
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path) => {
+        if (path === "/" && location.pathname !== "/") return false;
+        return location.pathname === path || location.pathname.startsWith(`${path}/`);
+    };
 
     const getRoleLabel = () => {
         const role = user?.role;
@@ -197,7 +219,17 @@ const DashboardLayout = ({ children }) => {
                     </nav>
 
                     {/* Bottom Section */}
-                    <div className="p-4 border-t border-gray-200">
+                    <div className="p-4 border-t border-gray-200 space-y-4">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center w-full px-3 py-2.5 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                        >
+                            <span className="mr-3">
+                                {getIcon("logout")}
+                            </span>
+                            Logout
+                        </button>
+
                         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
                             <h4 className="font-semibold text-sm mb-1">Need Help?</h4>
                             <p className="text-xs text-indigo-100 mb-3">Check our documentation or contact support.</p>
@@ -216,7 +248,10 @@ const DashboardLayout = ({ children }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto bg-gray-50">
+            <main
+                ref={mainContentRef}
+                className="flex-1 overflow-y-auto bg-gray-50"
+            >
                 {children}
             </main>
         </div>

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { IoMdChatbubbles } from "react-icons/io";
 import ChatWindow from "../../components/ChatWindow";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../config/api";
 
 const CoursePlayer = () => {
     const { courseId } = useParams();
@@ -25,7 +26,7 @@ const CoursePlayer = () => {
             try {
                 // Fetch full course details (populated with sections and lessons)
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/courses/${courseId}`,
+                    `${API_BASE_URL}/api/v1/courses/${courseId}`,
                     { withCredentials: true }
                 );
                 const courseData = response.data.data;
@@ -38,7 +39,7 @@ const CoursePlayer = () => {
 
                 // Fetch progress
                 const progressRes = await axios.get(
-                    `http://localhost:8000/api/v1/enrollments/${courseId}/progress`,
+                    `${API_BASE_URL}/api/v1/enrollments/${courseId}/progress`,
                     { withCredentials: true }
                 );
                 setCompletedLessons(progressRes.data.data.completedLessons || []);
@@ -64,7 +65,7 @@ const CoursePlayer = () => {
         setMarking(true);
         try {
             await axios.post(
-                `http://localhost:8000/api/v1/enrollments/${courseId}/lesson/${currentLesson._id}/complete`,
+                `${API_BASE_URL}/api/v1/enrollments/${courseId}/lesson/${currentLesson._id}/complete`,
                 {},
                 { withCredentials: true }
             );
@@ -81,7 +82,7 @@ const CoursePlayer = () => {
         setCompletingCourse(true);
         try {
             await axios.post(
-                `http://localhost:8000/api/v1/enrollments/${courseId}/complete`,
+                `${API_BASE_URL}/api/v1/enrollments/${courseId}/complete`,
                 {},
                 { withCredentials: true }
             );

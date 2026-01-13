@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const AdminCourses = () => {
     const [courses, setCourses] = useState([]);
@@ -13,7 +14,7 @@ const AdminCourses = () => {
         const fetchCourses = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/courses",
+                    `${API_BASE_URL}/api/v1/courses`,
                     { withCredentials: true }
                 );
                 setCourses(response.data.data || []);
@@ -76,9 +77,8 @@ const AdminCourses = () => {
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-                                filter === f ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${filter === f ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }`}
                         >
                             {f === "all" ? "All Courses" : f}
                         </button>
@@ -97,9 +97,8 @@ const AdminCourses = () => {
                                         <span className="text-3xl font-bold text-white/50">{course.title?.charAt(0)}</span>
                                     </div>
                                 )}
-                                <span className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold ${
-                                    course.isPublished ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-900"
-                                }`}>
+                                <span className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold ${course.isPublished ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-900"
+                                    }`}>
                                     {course.isPublished ? "Published" : "Draft"}
                                 </span>
                             </div>

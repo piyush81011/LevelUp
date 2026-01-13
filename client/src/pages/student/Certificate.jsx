@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const Certificate = () => {
     const { courseId } = useParams();
@@ -14,7 +15,7 @@ const Certificate = () => {
         const fetchCertificate = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/enrollments/${courseId}/certificate`,
+                    `${API_BASE_URL}/api/v1/enrollments/${courseId}/certificate`,
                     { withCredentials: true }
                 );
                 setCertificate(response.data.data);
@@ -33,17 +34,17 @@ const Certificate = () => {
             toast.error("Certificate not ready");
             return;
         }
-        
+
         setDownloading(true);
-        
+
         try {
             // Dynamically import html2canvas
             const html2canvasModule = await import("html2canvas");
             const html2canvas = html2canvasModule.default;
-            
+
             // Get the certificate element
             const element = certificateRef.current;
-            
+
             // Create canvas with explicit options
             const canvas = await html2canvas(element, {
                 scale: 2,
@@ -56,28 +57,28 @@ const Certificate = () => {
                 windowWidth: element.scrollWidth,
                 windowHeight: element.scrollHeight
             });
-            
+
             // Use toDataURL for simpler conversion
             const dataUrl = canvas.toDataURL("image/png", 1.0);
-            
+
             // Create download link
             const link = document.createElement("a");
             link.download = `LevelUp-Certificate-${certificate.certificateId}.png`;
             link.href = dataUrl;
             link.click();
-            
+
             toast.success("Certificate downloaded!");
             setDownloading(false);
         } catch (error) {
             console.error("Download error:", error);
             setDownloading(false);
-            
+
             // Fallback: Open print dialog
             const usePrint = window.confirm(
                 "Download failed. Would you like to use Print to PDF instead?\n\n" +
                 "Click OK to open print dialog (select 'Save as PDF' as destination)"
             );
-            
+
             if (usePrint) {
                 window.print();
             }
@@ -97,7 +98,7 @@ const Certificate = () => {
             <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center text-white">
                 <h2 className="text-2xl font-bold mb-4">Certificate Not Found</h2>
                 <p className="text-gray-400 mb-6">You need to complete the course first to get your certificate.</p>
-                <Link 
+                <Link
                     to={`/course/${courseId}/learn`}
                     className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors"
                 >
@@ -119,8 +120,8 @@ const Certificate = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <Link 
-                            to="/student/dashboard" 
+                        <Link
+                            to="/student/dashboard"
                             className="text-gray-400 hover:text-white flex items-center gap-2 mb-2"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,14 +156,14 @@ const Certificate = () => {
                 </div>
 
                 {/* Certificate */}
-                <div 
+                <div
                     ref={certificateRef}
                     data-certificate="true"
                     id="certificate-container"
                     className="relative rounded-2xl p-1 shadow-2xl print:shadow-none"
                     style={{ backgroundColor: "#1f2937" }}
                 >
-                    <div 
+                    <div
                         className="rounded-2xl p-8 md:p-12 relative overflow-hidden"
                         style={{ backgroundColor: "#111827" }}
                     >
@@ -176,14 +177,14 @@ const Certificate = () => {
                         <div className="relative z-10 text-center">
                             {/* Logo & Header */}
                             <div className="flex justify-center mb-6">
-                                <div 
+                                <div
                                     className="w-16 h-16 rounded-2xl flex items-center justify-center"
                                     style={{ background: "linear-gradient(135deg, #6366f1 0%, #9333ea 100%)" }}
                                 >
                                     <span className="text-white font-bold text-2xl">L</span>
                                 </div>
                             </div>
-                            
+
                             <p style={{ color: "#818cf8" }} className="text-sm font-semibold tracking-widest uppercase mb-2">LevelUp</p>
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">Certificate</h2>
                             <p className="text-xl mb-8" style={{ color: "#9ca3af" }}>of Completion</p>
@@ -232,7 +233,7 @@ const Certificate = () => {
                             </div>
 
                             {/* Certificate ID */}
-                            <div 
+                            <div
                                 className="inline-block rounded-lg px-6 py-3 border"
                                 style={{ backgroundColor: "#1f2937", borderColor: "#374151" }}
                             >
@@ -253,7 +254,7 @@ const Certificate = () => {
                 <div className="mt-8 bg-gray-800 rounded-xl p-6 border border-gray-700">
                     <h3 className="text-lg font-semibold text-white mb-4">Share Your Achievement</h3>
                     <div className="flex flex-wrap gap-3">
-                        <button 
+                        <button
                             onClick={() => {
                                 navigator.clipboard.writeText(`I just completed "${certificate.courseName}" on LevelUp! Certificate ID: ${certificate.certificateId}`);
                                 toast.success("Copied to clipboard!");
@@ -272,7 +273,7 @@ const Certificate = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-[#0077b5] hover:bg-[#006699] text-white rounded-lg text-sm transition-colors"
                         >
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                             </svg>
                             Share on LinkedIn
                         </a>
@@ -283,7 +284,7 @@ const Certificate = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-950 text-white rounded-lg text-sm transition-colors border border-gray-700"
                         >
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                             </svg>
                             Share on X
                         </a>

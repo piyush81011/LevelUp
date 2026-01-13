@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../config/api";
 
 const Home = () => {
     const { user } = useAuth();
@@ -20,13 +21,13 @@ const Home = () => {
 
             try {
                 // Fetch all published courses
-                const coursesRes = await axios.get("http://localhost:8000/api/v1/courses");
+                const coursesRes = await axios.get(`${API_BASE_URL}/api/v1/courses`);
                 setCourses(coursesRes.data.data);
 
                 // If logged in as student, fetch user's enrollments
                 if (user && user.role === "student") {
                     const enrollmentsRes = await axios.get(
-                        "http://localhost:8000/api/v1/enrollments/my-enrollments",
+                        `${API_BASE_URL}/api/v1/enrollments/my-enrollments`,
                         { withCredentials: true }
                     );
                     setEnrollments(enrollmentsRes.data.data);
@@ -92,7 +93,7 @@ const Home = () => {
                                 >
                                     Get Started
                                 </Link>
-                                <a 
+                                <a
                                     href="#courses"
                                     className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-lg font-bold hover:bg-white/20 transition-all duration-300"
                                 >
@@ -148,7 +149,7 @@ const Home = () => {
                                             <h3 className="text-lg font-bold text-white mt-1 mb-3 line-clamp-1">
                                                 {enrollment.course?.title}
                                             </h3>
-                                            
+
                                             {/* Progress Bar */}
                                             <div className="mb-4">
                                                 <div className="flex justify-between text-xs mb-1">
@@ -158,13 +159,13 @@ const Home = () => {
                                                     </span>
                                                 </div>
                                                 <div className="w-full bg-gray-700 rounded-full h-2">
-                                                    <div 
+                                                    <div
                                                         className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all"
                                                         style={{ width: `${Math.min((enrollment.progress?.completedLessons?.length || 0) * 10, 100)}%` }}
                                                     ></div>
                                                 </div>
                                             </div>
-                                            
+
                                             <Link
                                                 to={`/course/${enrollment.course?._id}/learn`}
                                                 className="block w-full text-center py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"

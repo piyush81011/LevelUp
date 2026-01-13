@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { IoMdSend, IoMdClose } from "react-icons/io";
+import { API_BASE_URL, SOCKET_URL } from "../config/api";
 
 const ChatWindow = ({ courseId, onClose, receiverId, isEmbedded = false }) => {
     const { user } = useAuth();
@@ -35,7 +36,7 @@ const ChatWindow = ({ courseId, onClose, receiverId, isEmbedded = false }) => {
 
         const fetchHistory = async () => {
             try {
-                let url = `http://localhost:8000/api/v1/chat/${courseId}`;
+                let url = `${API_BASE_URL}/api/v1/chat/${courseId}`;
                 if (user.role === "instructor" && receiverId) {
                     url += `?studentId=${receiverId}`;
                 }
@@ -52,7 +53,7 @@ const ChatWindow = ({ courseId, onClose, receiverId, isEmbedded = false }) => {
         if (activeRoomId) {
             fetchHistory();
 
-            const newSocket = io("http://localhost:8000");
+            const newSocket = io(SOCKET_URL);
             setSocket(newSocket);
 
             newSocket.emit("join_chat", activeRoomId); // Join private room

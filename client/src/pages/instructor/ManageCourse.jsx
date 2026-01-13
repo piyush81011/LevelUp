@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const ManageCourse = () => {
     const { courseId } = useParams();
@@ -28,7 +29,7 @@ const ManageCourse = () => {
     const fetchCourseDetails = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8000/api/v1/courses/${courseId}`,
+                `${API_BASE_URL}/api/v1/courses/${courseId}`,
                 { withCredentials: true }
             );
             setCourse(response.data.data);
@@ -44,7 +45,7 @@ const ManageCourse = () => {
         e.preventDefault();
         try {
             await axios.post(
-                `http://localhost:8000/api/v1/content/course/${courseId}/section`,
+                `${API_BASE_URL}/api/v1/content/course/${courseId}/section`,
                 { title: newSectionTitle },
                 { withCredentials: true }
             );
@@ -61,7 +62,7 @@ const ManageCourse = () => {
         if (!window.confirm("Delete this section and all its lessons?")) return;
         try {
             await axios.delete(
-                `http://localhost:8000/api/v1/content/section/${sectionId}`,
+                `${API_BASE_URL}/api/v1/content/section/${sectionId}`,
                 { withCredentials: true }
             );
             toast.success("Section deleted");
@@ -75,7 +76,7 @@ const ManageCourse = () => {
         e.preventDefault();
         try {
             await axios.post(
-                `http://localhost:8000/api/v1/content/section/${sectionId}/lesson`,
+                `${API_BASE_URL}/api/v1/content/section/${sectionId}/lesson`,
                 lessonForm,
                 { withCredentials: true }
             );
@@ -92,7 +93,7 @@ const ManageCourse = () => {
         if (!window.confirm("Delete this lesson?")) return;
         try {
             await axios.delete(
-                `http://localhost:8000/api/v1/content/lesson/${lessonId}`,
+                `${API_BASE_URL}/api/v1/content/lesson/${lessonId}`,
                 { withCredentials: true }
             );
             toast.success("Lesson deleted");

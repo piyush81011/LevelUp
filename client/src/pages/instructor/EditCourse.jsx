@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const EditCourse = () => {
     const { courseId } = useParams();
@@ -105,7 +106,7 @@ const EditCourse = () => {
         const fetchCourse = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/courses/${courseId}`,
+                    `${API_BASE_URL}/api/v1/courses/${courseId}`,
                     { withCredentials: true }
                 );
                 const course = response.data.data;
@@ -141,7 +142,7 @@ const EditCourse = () => {
 
         try {
             await axios.put(
-                `http://localhost:8000/api/v1/courses/${courseId}`,
+                `${API_BASE_URL}/api/v1/courses/${courseId}`,
                 {
                     ...formData,
                     price: parseFloat(formData.price),
@@ -170,8 +171,8 @@ const EditCourse = () => {
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link 
-                        to="/instructor/dashboard" 
+                    <Link
+                        to="/instructor/dashboard"
                         className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
                     >
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,7 +270,7 @@ const EditCourse = () => {
                         <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 mb-2">
                             Thumbnail <span className="text-red-500">*</span>
                         </label>
-                        
+
                         {/* Thumbnail Preview */}
                         {formData.thumbnail && (
                             <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 mb-3">
@@ -304,7 +305,7 @@ const EditCourse = () => {
                                 </div>
                             </div>
                         )}
-                        
+
                         {/* Generate Button */}
                         {!formData.thumbnail && (
                             <button
@@ -331,13 +332,13 @@ const EditCourse = () => {
                                 )}
                             </button>
                         )}
-                        
+
                         <div className="flex items-center gap-2 mb-3">
                             <div className="flex-1 h-px bg-gray-200"></div>
                             <span className="text-xs text-gray-400">or paste URL</span>
                             <div className="flex-1 h-px bg-gray-200"></div>
                         </div>
-                        
+
                         <input
                             type="url"
                             id="thumbnail"

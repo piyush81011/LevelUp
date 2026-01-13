@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const InstructorDashboard = () => {
     const [courses, setCourses] = useState([]);
@@ -17,7 +18,7 @@ const InstructorDashboard = () => {
     const fetchCourses = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8000/api/v1/courses/my-courses",
+                `${API_BASE_URL}/api/v1/courses/my-courses`,
                 { withCredentials: true }
             );
             setCourses(response.data.data);
@@ -30,11 +31,11 @@ const InstructorDashboard = () => {
 
     const handleDelete = async (courseId) => {
         if (!window.confirm("Are you sure you want to delete this course?")) return;
-        
+
         setDeleting(courseId);
         try {
             await axios.delete(
-                `http://localhost:8000/api/v1/courses/${courseId}`,
+                `${API_BASE_URL}/api/v1/courses/${courseId}`,
                 { withCredentials: true }
             );
             toast.success("Course deleted successfully");
@@ -51,12 +52,12 @@ const InstructorDashboard = () => {
         setPublishing(courseId);
         try {
             const response = await axios.put(
-                `http://localhost:8000/api/v1/courses/${courseId}`,
+                `${API_BASE_URL}/api/v1/courses/${courseId}`,
                 { status: newStatus },
                 { withCredentials: true }
             );
             toast.success(`Course ${newStatus === "published" ? "published" : "unpublished"} successfully`);
-            setCourses(courses.map(course => 
+            setCourses(courses.map(course =>
                 course._id === courseId ? { ...course, status: newStatus } : course
             ));
         } catch (error) {
@@ -141,8 +142,8 @@ const InstructorDashboard = () => {
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">No courses yet</h3>
                         <p className="text-gray-500 mb-6">Get started by creating your first course</p>
-                        <Link 
-                            to="/instructor/create-course" 
+                        <Link
+                            to="/instructor/create-course"
                             className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium"
                         >
                             Create your first course
@@ -154,15 +155,15 @@ const InstructorDashboard = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {courses.map((course) => (
-                            <div 
-                                key={course._id} 
+                            <div
+                                key={course._id}
                                 className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
                             >
                                 {/* Course Thumbnail */}
                                 <div className="h-40 bg-gradient-to-br from-indigo-500 to-purple-600 relative">
                                     {course.thumbnail ? (
-                                        <img 
-                                            src={course.thumbnail} 
+                                        <img
+                                            src={course.thumbnail}
                                             alt={course.title}
                                             className="w-full h-full object-cover"
                                         />
@@ -173,20 +174,19 @@ const InstructorDashboard = () => {
                                             </svg>
                                         </div>
                                     )}
-                                    <span className={`absolute top-3 right-3 px-2.5 py-1 text-xs font-semibold rounded-full ${
-                                        course.status === "published" 
-                                            ? "bg-green-100 text-green-800" 
+                                    <span className={`absolute top-3 right-3 px-2.5 py-1 text-xs font-semibold rounded-full ${course.status === "published"
+                                            ? "bg-green-100 text-green-800"
                                             : "bg-yellow-100 text-yellow-800"
-                                    }`}>
+                                        }`}>
                                         {course.status === "published" ? "Published" : "Draft"}
                                     </span>
                                 </div>
-                                
+
                                 {/* Course Info */}
                                 <div className="p-5">
                                     <h3 className="font-semibold text-gray-900 text-lg mb-2 line-clamp-1">{course.title}</h3>
                                     <p className="text-gray-500 text-sm mb-4 line-clamp-2">{course.description}</p>
-                                    
+
                                     <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                                         <span className="inline-flex items-center">
                                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,31 +196,30 @@ const InstructorDashboard = () => {
                                         </span>
                                         <span className="font-semibold text-indigo-600">${course.price}</span>
                                     </div>
-                                    
+
                                     {/* Actions */}
                                     <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-                                        <button 
+                                        <button
                                             onClick={() => handleTogglePublish(course._id, course.status)}
                                             disabled={publishing === course._id}
-                                            className={`flex-1 text-center px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${
-                                                course.status === "published"
+                                            className={`flex-1 text-center px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${course.status === "published"
                                                     ? "text-yellow-600 bg-yellow-50 hover:bg-yellow-100"
                                                     : "text-green-600 bg-green-50 hover:bg-green-100"
-                                            }`}
+                                                }`}
                                         >
-                                            {publishing === course._id 
-                                                ? "Updating..." 
-                                                : course.status === "published" 
-                                                    ? "Unpublish" 
+                                            {publishing === course._id
+                                                ? "Updating..."
+                                                : course.status === "published"
+                                                    ? "Unpublish"
                                                     : "Publish"}
                                         </button>
-                                        <Link 
-                                            to={`/instructor/course/${course._id}/edit`} 
+                                        <Link
+                                            to={`/instructor/course/${course._id}/edit`}
                                             className="flex-1 text-center px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
                                         >
                                             Edit
                                         </Link>
-                                        <button 
+                                        <button
                                             onClick={() => handleDelete(course._id)}
                                             disabled={deleting === course._id}
                                             className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"

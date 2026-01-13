@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
 const AuthContext = createContext();
 
@@ -7,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 
 // Configure axios defaults for all requests
 axios.defaults.withCredentials = true;
+axios.defaults.baseURL = API_BASE_URL;
 
 // Add interceptor to include token in all requests
 axios.interceptors.request.use(
@@ -53,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post("http://localhost:8000/api/v1/users/logout", {}, { withCredentials: true });
+            await axios.post(`${API_BASE_URL}/api/v1/users/logout`, {}, { withCredentials: true });
         } catch (error) {
             console.error("Logout error:", error);
         }

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import { IoMdChatbubbles } from "react-icons/io";
 import ChatWindow from "../../components/ChatWindow";
+import { API_BASE_URL } from "../../config/api";
 
 const CourseDetails = () => {
     const { courseId } = useParams();
@@ -19,7 +20,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchCourse = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/api/v1/courses/${courseId}`);
+                const response = await axios.get(`${API_BASE_URL}/api/v1/courses/${courseId}`);
                 setCourse(response.data.data);
             } catch (error) {
                 toast.error("Failed to fetch course details");
@@ -32,7 +33,7 @@ const CourseDetails = () => {
             if (!user) return;
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/enrollments/${courseId}/status`,
+                    `${API_BASE_URL}/api/v1/enrollments/${courseId}/status`,
                     { withCredentials: true }
                 );
                 setIsEnrolled(response.data.data.isEnrolled);
@@ -55,7 +56,7 @@ const CourseDetails = () => {
         setEnrolling(true);
         try {
             await axios.post(
-                `http://localhost:8000/api/v1/enrollments/${courseId}`,
+                `${API_BASE_URL}/api/v1/enrollments/${courseId}`,
                 {},
                 { withCredentials: true }
             );

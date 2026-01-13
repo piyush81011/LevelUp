@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const Certificates = () => {
     const [certificates, setCertificates] = useState([]);
@@ -12,23 +13,23 @@ const Certificates = () => {
             try {
                 // Get all enrollments and filter for completed ones
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/enrollments/my-enrollments",
+                    `${API_BASE_URL}/api/v1/enrollments/my-enrollments`,
                     { withCredentials: true }
                 );
                 const enrollments = response.data.data || [];
-                
+
                 // Fetch progress for each to check completion
                 const completedCourses = [];
                 for (const enrollment of enrollments) {
                     try {
                         const progressRes = await axios.get(
-                            `http://localhost:8000/api/v1/enrollments/${enrollment.course?._id}/progress`,
+                            `${API_BASE_URL}/api/v1/enrollments/${enrollment.course?._id}/progress`,
                             { withCredentials: true }
                         );
                         if (progressRes.data.data.isCompleted) {
                             // Get certificate data
                             const certRes = await axios.get(
-                                `http://localhost:8000/api/v1/enrollments/${enrollment.course?._id}/certificate`,
+                                `${API_BASE_URL}/api/v1/enrollments/${enrollment.course?._id}/certificate`,
                                 { withCredentials: true }
                             );
                             completedCourses.push({

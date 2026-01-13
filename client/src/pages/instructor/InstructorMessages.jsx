@@ -3,6 +3,7 @@ import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import ChatWindow from "../../components/ChatWindow";
 import { IoMdChatbubbles } from "react-icons/io";
+import { API_BASE_URL } from "../../config/api";
 
 const InstructorMessages = () => {
     const [conversations, setConversations] = useState([]);
@@ -13,7 +14,7 @@ const InstructorMessages = () => {
         const fetchConversations = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/chat/conversations",
+                    `${API_BASE_URL}/api/v1/chat/conversations`,
                     { withCredentials: true }
                 );
                 if (response.data.success) {
@@ -61,8 +62,8 @@ const InstructorMessages = () => {
                                         key={index}
                                         onClick={() => handleSelectConversation(conv)}
                                         className={`w-full text-left p-4 hover:bg-gray-50 border-b border-gray-100 transition-colors ${selectedConversation?.student._id === conv.student._id && selectedConversation?.course._id === conv.course._id
-                                                ? "bg-purple-50 border-purple-100"
-                                                : ""
+                                            ? "bg-purple-50 border-purple-100"
+                                            : ""
                                             }`}
                                     >
                                         <div className="flex items-start gap-3">

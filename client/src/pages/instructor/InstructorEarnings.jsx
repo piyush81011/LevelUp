@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const InstructorEarnings = () => {
     const [earnings, setEarnings] = useState(null);
@@ -10,7 +11,7 @@ const InstructorEarnings = () => {
         const fetchEarnings = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/enrollments/instructor/earnings",
+                    `${API_BASE_URL}/api/v1/enrollments/instructor/earnings`,
                     { withCredentials: true }
                 );
                 setEarnings(response.data.data);
@@ -79,9 +80,9 @@ const InstructorEarnings = () => {
                             {earnings?.monthlyEarnings?.map((month, index) => (
                                 <div key={index} className="flex-1 flex flex-col items-center">
                                     <span className="text-sm font-medium text-gray-900 mb-2">${month.earnings}</span>
-                                    <div 
+                                    <div
                                         className="w-full bg-indigo-500 rounded-t-lg transition-all duration-300 hover:bg-indigo-600"
-                                        style={{ 
+                                        style={{
                                             height: `${maxEarning > 0 ? (month.earnings / maxEarning) * 180 : 0}px`,
                                             minHeight: month.earnings > 0 ? '20px' : '4px',
                                             backgroundColor: month.earnings === 0 ? '#e5e7eb' : undefined
@@ -110,7 +111,7 @@ const InstructorEarnings = () => {
                     <div className="p-6 border-b border-gray-100">
                         <h3 className="text-lg font-semibold text-gray-900">Recent Transactions</h3>
                     </div>
-                    
+
                     {earnings?.recentTransactions?.length > 0 ? (
                         <div className="overflow-x-auto">
                             <table className="w-full">

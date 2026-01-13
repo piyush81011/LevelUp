@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { API_BASE_URL } from "../../config/api";
 
 const StudentDashboard = () => {
     const [enrollments, setEnrollments] = useState([]);
@@ -13,17 +14,17 @@ const StudentDashboard = () => {
         const fetchEnrollments = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/enrollments/my-enrollments",
+                    `${API_BASE_URL}/api/v1/enrollments/my-enrollments`,
                     { withCredentials: true }
                 );
                 const enrollmentData = response.data.data;
                 setEnrollments(enrollmentData);
-                
+
                 // Fetch progress for each enrollment
                 const progressPromises = enrollmentData.map(async (enrollment) => {
                     try {
                         const progressRes = await axios.get(
-                            `http://localhost:8000/api/v1/enrollments/${enrollment.course?._id}/progress`,
+                            `${API_BASE_URL}/api/v1/enrollments/${enrollment.course?._id}/progress`,
                             { withCredentials: true }
                         );
                         return { courseId: enrollment.course?._id, progress: progressRes.data.data };
@@ -31,7 +32,7 @@ const StudentDashboard = () => {
                         return { courseId: enrollment.course?._id, progress: { progressPercentage: 0, isCompleted: false } };
                     }
                 });
-                
+
                 const progressResults = await Promise.all(progressPromises);
                 const progressMap = {};
                 progressResults.forEach(({ courseId, progress }) => {
@@ -117,86 +118,87 @@ const StudentDashboard = () => {
                             const courseProgress = progressData[enrollment.course?._id] || {};
                             const progress = courseProgress.progressPercentage || 0;
                             const isCompleted = courseProgress.isCompleted || false;
-                            
+
                             return (
-                            <div key={enrollment._id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-                                <div className="h-40 bg-gradient-to-br from-indigo-500 to-purple-600 relative overflow-hidden">
-                                    {enrollment.course?.thumbnail ? (
-                                        <img
-                                            src={enrollment.course.thumbnail}
-                                            alt={enrollment.course.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <span className="text-4xl font-bold text-white/50">{enrollment.course?.title?.charAt(0)}</span>
-                                        </div>
-                                    )}
-                                    {progress === 100 && (
-                                        <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            Completed
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="p-5">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
-                                            {enrollment.course?.category || "Course"}
-                                        </span>
-                                        <span className="text-xs text-gray-400">
-                                            {new Date(enrollment.enrolledAt).toLocaleDateString()}
-                                        </span>
+                                <div key={enrollment._id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+                                    <div className="h-40 bg-gradient-to-br from-indigo-500 to-purple-600 relative overflow-hidden">
+                                        {enrollment.course?.thumbnail ? (
+                                            <img
+                                                src={enrollment.course.thumbnail}
+                                                alt={enrollment.course.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <span className="text-4xl font-bold text-white/50">{enrollment.course?.title?.charAt(0)}</span>
+                                            </div>
+                                        )}
+                                        {progress === 100 && (
+                                            <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                Completed
+                                            </div>
+                                        )}
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-indigo-600 transition-colors">
-                                        {enrollment.course?.title}
-                                    </h3>
-                                    <p className="text-sm text-gray-500 mb-4">
-                                        By {enrollment.course?.instructor?.name || "Unknown"}
-                                    </p>
-
-                                    {/* Progress Bar */}
-                                    <div className="mb-4">
-                                        <div className="flex justify-between text-xs mb-1">
-                                            <span className="text-gray-500">Progress</span>
-                                            <span className="text-gray-900 font-medium">{progress}%</span>
+                                    <div className="p-5">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
+                                                {enrollment.course?.category || "Course"}
+                                            </span>
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(enrollment.enrolledAt).toLocaleDateString()}
+                                            </span>
                                         </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2">
-                                            <div 
-                                                className={`h-2 rounded-full transition-all duration-300 ${isCompleted ? 'bg-green-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500'}`} 
-                                                style={{ width: `${progress}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-indigo-600 transition-colors">
+                                            {enrollment.course?.title}
+                                        </h3>
+                                        <p className="text-sm text-gray-500 mb-4">
+                                            By {enrollment.course?.instructor?.name || "Unknown"}
+                                        </p>
 
-                                    {isCompleted ? (
-                                        <div className="flex gap-2">
+                                        {/* Progress Bar */}
+                                        <div className="mb-4">
+                                            <div className="flex justify-between text-xs mb-1">
+                                                <span className="text-gray-500">Progress</span>
+                                                <span className="text-gray-900 font-medium">{progress}%</span>
+                                            </div>
+                                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                                <div
+                                                    className={`h-2 rounded-full transition-all duration-300 ${isCompleted ? 'bg-green-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500'}`}
+                                                    style={{ width: `${progress}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        {isCompleted ? (
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    to={`/course/${enrollment.course?._id}/learn`}
+                                                    className="flex-1 text-center py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                                                >
+                                                    ▶ Watch Again
+                                                </Link>
+                                                <Link
+                                                    to={`/course/${enrollment.course?._id}/certificate`}
+                                                    className="flex-1 text-center py-2.5 px-3 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-900 rounded-lg text-sm font-semibold transition-colors"
+                                                >
+                                                    🎓 Certificate
+                                                </Link>
+                                            </div>
+                                        ) : (
                                             <Link
                                                 to={`/course/${enrollment.course?._id}/learn`}
-                                                className="flex-1 text-center py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                                                className="block w-full text-center py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
                                             >
-                                                ▶ Watch Again
+                                                Continue Learning
                                             </Link>
-                                            <Link
-                                                to={`/course/${enrollment.course?._id}/certificate`}
-                                                className="flex-1 text-center py-2.5 px-3 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-900 rounded-lg text-sm font-semibold transition-colors"
-                                            >
-                                                🎓 Certificate
-                                            </Link>
-                                        </div>
-                                    ) : (
-                                        <Link
-                                            to={`/course/${enrollment.course?._id}/learn`}
-                                            className="block w-full text-center py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
-                                        >
-                                            Continue Learning
-                                        </Link>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )})}
+                            )
+                        })}
                     </div>
                 )}
             </div>

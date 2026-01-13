@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../config/api";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const Register = () => {
         setLoading(true);
         try {
             await axios.post(
-                "http://localhost:8000/api/v1/users/register",
+                `${API_BASE_URL}/api/v1/users/register`,
                 formData,
                 { withCredentials: true }
             );

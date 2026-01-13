@@ -5,6 +5,7 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import { IoMdChatbubbles } from "react-icons/io";
 import ChatWindow from "../../components/ChatWindow";
 import InstructorChatList from "../../components/InstructorChatList";
+import { API_BASE_URL } from "../../config/api";
 
 const InstructorCourses = () => {
     const [courses, setCourses] = useState([]);
@@ -16,7 +17,7 @@ const InstructorCourses = () => {
         const fetchCourses = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/courses/my-courses",
+                    `${API_BASE_URL}/api/v1/courses/my-courses`,
                     { withCredentials: true }
                 );
                 setCourses(response.data.data || []);
