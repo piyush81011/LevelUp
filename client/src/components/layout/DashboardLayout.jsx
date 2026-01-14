@@ -142,27 +142,36 @@ const DashboardLayout = ({ children }) => {
     };
 
     return (
-        <div className="flex h-[calc(100vh-64px)]">
-            {/* Mobile Sidebar Toggle */}
-            <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden fixed bottom-4 right-4 z-50 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
-            >
-                {sidebarOpen ? (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                ) : (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                )}
-            </button>
+        <div className="flex h-screen bg-gray-50 flex-col lg:flex-row overflow-hidden">
+            {/* Mobile Header */}
+            <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <Link to="/" className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                        <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">LevelUp</span>
+                    </Link>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+            </div>
 
             {/* Sidebar Overlay for Mobile */}
             {sidebarOpen && (
                 <div
-                    className="lg:hidden fixed inset-0 bg-black/50 z-40"
+                    className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
@@ -170,79 +179,90 @@ const DashboardLayout = ({ children }) => {
             {/* Sidebar */}
             <aside
                 className={`
-                    fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 
+                    fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 
                     transform transition-transform duration-300 ease-in-out
                     lg:transform-none lg:translate-x-0
                     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                    mt-16 lg:mt-0
+                    flex flex-col h-full
                 `}
             >
-                <div className="flex flex-col h-full">
-                    {/* User Info */}
-                    <div className="p-4 border-b border-gray-200">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                                {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">
-                                    {user?.name || "User"}
-                                </p>
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getRoleColor()}`}>
-                                    {getRoleLabel()}
-                                </span>
-                            </div>
+                {/* Logo Area (Hidden on Mobile since we have header) */}
+                <div className="hidden lg:flex items-center p-4 border-b border-gray-200 h-16">
+                    <Link to="/" className="flex items-center gap-2 w-full">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                        <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">LevelUp</span>
+                    </Link>
+                </div>
+
+                {/* User Info */}
+                <div className="p-4 border-b border-gray-200 bg-gray-50/50">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md hover:shadow-lg transition-shadow">
+                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-gray-900 truncate">
+                                {user?.name || "User"}
+                            </p>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${getRoleColor()}`}>
+                                {getRoleLabel()}
+                            </span>
                         </div>
                     </div>
+                </div>
 
-                    {/* Navigation */}
-                    <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.path}
-                                to={item.path}
-                                onClick={() => setSidebarOpen(false)}
-                                className={`
-                                    flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                                    ${isActive(item.path)
-                                        ? "bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600 -ml-1 pl-4"
-                                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                                    }
-                                `}
-                            >
-                                <span className={`mr-3 ${isActive(item.path) ? "text-indigo-600" : "text-gray-400"}`}>
-                                    {getIcon(item.icon)}
-                                </span>
-                                {item.name}
-                            </Link>
-                        ))}
-                    </nav>
-
-                    {/* Bottom Section */}
-                    <div className="p-4 border-t border-gray-200 space-y-4">
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center w-full px-3 py-2.5 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                {/* Navigation */}
+                <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setSidebarOpen(false)}
+                            className={`
+                                flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group
+                                ${isActive(item.path)
+                                    ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                }
+                            `}
                         >
-                            <span className="mr-3">
-                                {getIcon("logout")}
+                            <span className={`mr-3 transition-colors ${isActive(item.path) ? "text-indigo-600" : "text-gray-400 group-hover:text-gray-500"}`}>
+                                {getIcon(item.icon)}
                             </span>
-                            Logout
-                        </button>
+                            {item.name}
+                        </Link>
+                    ))}
+                </nav>
 
-                        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
-                            <h4 className="font-semibold text-sm mb-1">Need Help?</h4>
-                            <p className="text-xs text-indigo-100 mb-3">Check our documentation or contact support.</p>
-                            <Link
-                                to="/support"
-                                className="inline-flex items-center text-xs font-medium bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md transition-colors"
-                            >
-                                Get Support
-                                <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </Link>
-                        </div>
+                {/* Bottom Section */}
+                <div className="p-4 border-t border-gray-200 space-y-4 bg-gray-50/30">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center w-full px-3 py-2.5 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors group"
+                    >
+                        <span className="mr-3 text-red-400 group-hover:text-red-500 transition-colors">
+                            {getIcon("logout")}
+                        </span>
+                        Logout
+                    </button>
+
+                    <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl p-4 text-white shadow-lg relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-20 h-20 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-colors"></div>
+                        <h4 className="font-semibold text-sm mb-1 relative z-10">Need Help?</h4>
+                        <p className="text-xs text-indigo-100 mb-3 relative z-10">Check our documentation or contact support.</p>
+                        <Link
+                            to="/support"
+                            className="inline-flex items-center text-xs font-bold bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg transition-all duration-300 relative z-10 hover:shadow-lg border border-white/10"
+                        >
+                            Get Support
+                            <svg className="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </Link>
                     </div>
                 </div>
             </aside>
@@ -250,7 +270,7 @@ const DashboardLayout = ({ children }) => {
             {/* Main Content */}
             <main
                 ref={mainContentRef}
-                className="flex-1 overflow-y-auto bg-gray-50"
+                className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 scroll-smooth w-full"
             >
                 {children}
             </main>

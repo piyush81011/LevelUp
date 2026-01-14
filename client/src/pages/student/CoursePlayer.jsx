@@ -100,6 +100,39 @@ const CoursePlayer = () => {
     const totalLessons = course?.sections?.reduce((acc, section) => acc + (section.lessons?.length || 0), 0) || 0;
     const progressPercentage = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
 
+    // Helper to extract YouTube ID and format embed URL
+    const getYoutubeEmbedUrl = (url) => {
+        if (!url) return "";
+
+        let videoId = "";
+
+        // Handle various YouTube formats
+        if (url.includes("youtube.com/watch")) {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            videoId = urlParams.get("v");
+        } else if (url.includes("youtu.be/")) {
+            videoId = url.split("youtu.be/")[1]?.split("?")[0];
+        } else if (url.includes("youtube.com/embed/")) {
+            videoId = url.split("youtube.com/embed/")[1]?.split("?")[0];
+        } else if (url.includes("m.youtube.com/watch")) {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            videoId = urlParams.get("v");
+        }
+
+        if (videoId) {
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        return url; // Return original if parsing fails (might be direct video file)
+    };
+
+    // Auto-close sidebar on mobile on initial load
+    useEffect(() => {
+        if (window.innerWidth < 768) {
+            setSidebarOpen(false);
+        }
+    }, []);
+
     if (loading) return (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center">
             <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
@@ -109,7 +142,7 @@ const CoursePlayer = () => {
     if (!course) return <div className="text-white text-center mt-20">Course content not found</div>;
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex flex-col overflow-hidden">
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col overflow-hidden relative">
             {/* Top Bar */}
             <header className="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4 shrink-0 z-20">
                 <div className="flex items-center gap-4">
@@ -133,27 +166,27 @@ const CoursePlayer = () => {
                     </div>
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="md:hidden text-gray-400"
+                        className="md:hidden text-gray-400 p-2 hover:bg-gray-700 rounded-lg"
                     >
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
                         </svg>
                     </button>
                 </div>
             </header>
 
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex overflow-hidden relative">
                 {/* Main Content (Player) */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
+                <div className="flex-1 overflow-y-auto p-4 md:p-8 relative w-full">
                     {currentLesson ? (
                         <div className="max-w-4xl mx-auto">
-                            <div className="aspect-w-16 aspect-h-9 bg-black rounded-xl overflow-hidden shadow-2xl mb-8">
+                            <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl mb-8 relative">
                                 {/* Flexible Video Player logic */}
-                                {currentLesson.videoUrl.includes("youtube.com") || currentLesson.videoUrl.includes("youtu.be") ? (
+                                {currentLesson.videoUrl.includes("youtu") ? (
                                     <iframe
-                                        src={currentLesson.videoUrl.replace("watch?v=", "embed/")}
+                                        src={getYoutubeEmbedUrl(currentLesson.videoUrl)}
                                         title={currentLesson.title}
-                                        className="w-full h-[500px]"
+                                        className="w-full h-full absolute inset-0"
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
@@ -162,18 +195,18 @@ const CoursePlayer = () => {
                                     <video
                                         src={currentLesson.videoUrl}
                                         controls
-                                        className="w-full h-full object-contain"
+                                        className="w-full h-full object-contain absolute inset-0"
                                     />
                                 )}
                             </div>
 
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                     <h2 className="text-2xl font-bold">{currentLesson.title}</h2>
                                     <button
                                         onClick={handleMarkComplete}
                                         disabled={marking || completedLessons.includes(currentLesson._id)}
-                                        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${completedLessons.includes(currentLesson._id)
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto ${completedLessons.includes(currentLesson._id)
                                             ? "bg-green-600/20 text-green-400 cursor-default"
                                             : "bg-indigo-600 hover:bg-indigo-700 text-white"
                                             }`}
@@ -210,12 +243,36 @@ const CoursePlayer = () => {
                     )}
                 </div>
 
+                {/* Mobile Sidebar Overlay */}
+                {sidebarOpen && (
+                    <div
+                        className="md:hidden fixed inset-0 bg-black/50 z-30"
+                        onClick={() => setSidebarOpen(false)}
+                    ></div>
+                )}
+
                 {/* Sidebar (Curriculum) */}
                 <div
-                    className={`${sidebarOpen ? "w-80 translate-x-0" : "w-0 translate-x-full"} md:translate-x-0 md:w-80 bg-gray-800 border-l border-gray-700 transition-all duration-300 flex flex-col shrink-0 absolute md:relative right-0 h-full z-10`}
+                    className={`
+                        fixed md:static top-[64px] right-0 bottom-0 z-40
+                        w-80 bg-gray-800 border-l border-gray-700 
+                        transform transition-transform duration-300 ease-in-out
+                        ${sidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
+                        flex flex-col shrink-0 h-[calc(100vh-64px)] md:h-full
+                    `}
                 >
-                    <div className="p-4 border-b border-gray-700 text-sm font-bold text-gray-400 uppercase tracking-wider">
-                        Course Content
+                    <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+                        <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+                            Course Content
+                        </span>
+                        <button
+                            onClick={() => setSidebarOpen(false)}
+                            className="md:hidden text-gray-400 hover:text-white"
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Certificate / Complete Course Section */}

@@ -82,7 +82,7 @@ const StudentDashboard = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-100">
                         <p className="text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wide">Enrolled Courses</p>
                         <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{enrollments.length}</p>

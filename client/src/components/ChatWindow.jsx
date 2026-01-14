@@ -93,7 +93,7 @@ const ChatWindow = ({ courseId, onClose, receiverId, isEmbedded = false }) => {
 
     const positionClasses = isEmbedded
         ? "w-full h-full bg-gray-900 flex flex-col"
-        : "fixed bottom-4 right-4 w-80 h-96 bg-gray-900 border border-gray-700 rounded-lg shadow-xl flex flex-col z-50";
+        : "fixed bottom-0 right-0 w-full sm:w-80 h-[80vh] sm:h-96 sm:bottom-4 sm:right-4 bg-gray-900 border border-gray-700 rounded-t-xl sm:rounded-lg shadow-xl flex flex-col z-50";
 
     return (
         <div className={positionClasses}>

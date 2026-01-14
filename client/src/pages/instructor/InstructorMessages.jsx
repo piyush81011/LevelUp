@@ -97,32 +97,27 @@ const InstructorMessages = () => {
                 {/* Main Area: Chat Window */}
                 <div className={`flex-1 bg-gray-50 flex flex-col items-center justify-center ${!selectedConversation ? "hidden md:flex" : "flex"}`}>
                     {selectedConversation ? (
-                        <div className="w-full h-full relative">
+                        <div className="w-full h-full flex flex-col">
                             {/* Mobile header to go back */}
-                            <div className="md:hidden bg-white p-3 border-b flex items-center gap-2">
-                                <button onClick={() => setSelectedConversation(null)} className="text-gray-600">
-                                    &larr; Back
+                            <div className="md:hidden bg-white p-3 border-b flex items-center gap-2 shrink-0 z-10">
+                                <button onClick={() => setSelectedConversation(null)} className="text-gray-600 flex items-center gap-1">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Back
                                 </button>
-                                <span className="font-bold">{selectedConversation.student.name}</span>
+                                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                                    {selectedConversation.student.name?.charAt(0).toUpperCase()}
+                                </div>
+                                <span className="font-bold truncate">{selectedConversation.student.name}</span>
                             </div>
 
-                            {/* Reuse ChatWindow but make it full container instead of floating fixed */}
-                            {/* Need to refactor ChatWindow slightly or just override classes via wrapper? 
-                                 ChatWindow is position:fixed. We need it relative here.
-                                 Quick fix: Wrap inside a div that forces relative behavior or Update ChatWindow to support 'mode' prop (floating vs embedded).
-                                 For now, let's just render it. The current ChatWindow is FIXED. 
-                                 I should probably update ChatWindow to accept a `className` or `style` prop to override fixed positioning.
-                             */}
-                            <div className="absolute inset-0 pb-20 md:pb-0">
-                                {/* 
-                                    Currently ChatWindow is hardcoded fixed. 
-                                    I will edit ChatWindow.jsx next to support embedded mode.
-                                */}
+                            {/* Chat Area */}
+                            <div className="flex-1 relative">
                                 <ChatWindow
                                     courseId={selectedConversation.course._id}
                                     receiverId={selectedConversation.student._id}
                                     onClose={() => setSelectedConversation(null)}
-                                    // Pass a prop to signal embedded mode
                                     isEmbedded={true}
                                 />
                             </div>

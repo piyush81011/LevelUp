@@ -99,7 +99,7 @@ const CourseDetails = () => {
                         <span className="inline-block py-1 px-3 rounded-full bg-indigo-500/20 text-indigo-400 text-sm font-semibold mb-6 border border-indigo-500/30">
                             {course.category}
                         </span>
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
                             {course.title}
                         </h1>
                         <p className="text-xl text-gray-300 mb-8 leading-relaxed">
@@ -162,8 +162,8 @@ const CourseDetails = () => {
             </div>
 
             {/* Course Content Placeholder */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
                     <div className="lg:col-span-2 space-y-12">
                         {/* What you'll learn */}
                         <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
@@ -328,6 +328,25 @@ const CourseDetails = () => {
                     )}
                     {showChat && <ChatWindow courseId={courseId} receiverId={course.instructor?._id} onClose={() => setShowChat(false)} />}
                 </>
+            )}
+
+            {/* Mobile Sticky Enroll Bar */}
+            {!isEnrolled && (
+                <div className="lg:hidden fixed bottom-0 left-0 w-full bg-gray-800 border-t border-gray-700 p-4 z-40 flex items-center justify-between shadow-xl pb-6">
+                    <div>
+                        <span className="text-gray-400 text-xs text-xs">Price</span>
+                        <div className="text-xl font-bold text-white">
+                            {course.price === 0 ? "Free" : `$${course.price}`}
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleEnroll}
+                        disabled={enrolling}
+                        className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 transition-colors shadow-lg disabled:opacity-50"
+                    >
+                        {enrolling ? "Enrolling..." : "Enroll Now"}
+                    </button>
+                </div>
             )}
         </div>
     );

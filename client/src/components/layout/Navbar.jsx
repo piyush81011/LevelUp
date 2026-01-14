@@ -116,52 +116,53 @@ const Navbar = () => {
                 {mobileMenuOpen && (
                     <div className="md:hidden py-4 border-t border-white/10">
                         <div className="flex flex-col space-y-2">
-                            <Link 
-                                to="/" 
+                            <Link
+
+                                to="/"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-sm font-medium"
+                                className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-base font-medium"
                             >
                                 Home
                             </Link>
-                            <Link 
-                                to="/#courses" 
+                            <Link
+                                to="/#courses"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-sm font-medium"
+                                className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-base font-medium"
                             >
                                 Courses
                             </Link>
                             {user && (
                                 <>
                                     {user.role === "instructor" && (
-                                        <Link 
-                                            to="/instructor/dashboard" 
+                                        <Link
+                                            to="/instructor/dashboard"
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-sm font-medium"
+                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-base font-medium"
                                         >
                                             Dashboard
                                         </Link>
                                     )}
                                     {user.role === "student" && (
-                                        <Link 
-                                            to="/student/dashboard" 
+                                        <Link
+                                            to="/student/dashboard"
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-sm font-medium"
+                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-base font-medium"
                                         >
                                             My Learning
                                         </Link>
                                     )}
                                     {user.role === "admin" && (
-                                        <Link 
-                                            to="/admin/dashboard" 
+                                        <Link
+                                            to="/admin/dashboard"
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-sm font-medium"
+                                            className="text-gray-300 hover:text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-all text-base font-medium"
                                         >
                                             Admin
                                         </Link>
                                     )}
                                 </>
                             )}
-                            
+
                             <div className="pt-4 mt-2 border-t border-white/10">
                                 {user ? (
                                     <div className="space-y-3">
