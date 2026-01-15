@@ -74,9 +74,9 @@ const Home = () => {
                         <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
                     </div>
 
-                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-20">
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
                         <div className="text-center">
-                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">
+                            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
                                     Master New Skills
                                 </span>
