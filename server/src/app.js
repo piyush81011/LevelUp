@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 // Handle multiple CORS origins
-const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:5173', 'http://localhost:5174'];
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:5173', 'http://localhost:5174', 'https://levelup-nkxz.onrender.com', 'https://level-up-sand.vercel.app'];
 
 app.use(
     cors({
